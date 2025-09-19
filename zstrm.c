@@ -229,7 +229,7 @@ main(int argc, char* argv[])
 		source = fopen(argv[1], "rb");
 		target = fopen(argv[2], "wb");
 		/* level is ignored here */
-		z = zstrm_create(ZSTRM_INFLATE | ZSTRM_AUTO, level, allocator);
+		z = zstrm_create(ZSTRM_INFLATE, level, allocator);
 	}
 
 	if (z == NULL) {
