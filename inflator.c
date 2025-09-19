@@ -15,7 +15,7 @@ decompressfile(FILE* ihandle, FILE* ohandle)
 	bool done;
 	TInflator* state;
 
-	state = inflator_create(NULL);
+	state = inflator_create(0, NULL);
 	if (state == NULL) {
 		puts("Failed to create inflator struct");
 		return 0;

@@ -42,9 +42,9 @@ inflate(TZStrm* z, FILE* source, FILE* target)
 {
 	uintxx r;
 
-	zstrm_setiofn(z, rcallback, source);
+	zstrm_setsourcefn(z, rcallback, source);
 	do {
-		r = zstrm_r(z, iobuffer, sizeof(iobuffer));
+		r = zstrm_inflate(z, iobuffer, sizeof(iobuffer));
 
 		if (fwrite(iobuffer, 1, r, target) != r || ferror(target)) {
 			puts("Error: IO error while writing file");
@@ -70,7 +70,7 @@ deflate(TZStrm* z, FILE* source, FILE* target)
 {
 	uintxx r;
 
-	zstrm_setiofn(z, wcallback, target);
+	zstrm_settargetfn(z, wcallback, target);
 	do {
 		r = fread(iobuffer, 1, sizeof(iobuffer), source);
 		if (ferror(source)) {
@@ -78,7 +78,7 @@ deflate(TZStrm* z, FILE* source, FILE* target)
 			return 0;
 		}
 
-		zstrm_w(z, iobuffer, r);
+		zstrm_deflate(z, iobuffer, r);
 		if (z->error) {
 			puts("Error: ZStream error");
 			return 0;
@@ -223,13 +223,13 @@ main(int argc, char* argv[])
 	if (argc == 6) {
 		source = fopen(argv[4], "rb");
 		target = fopen(argv[5], "wb");
-		z = zstrm_create(ZSTRM_WMODE | a[0].format, a[0].level, allocator);
+		z = zstrm_create(ZSTRM_DEFLATE | a[0].format, a[0].level, allocator);
 	}
 	else {
 		source = fopen(argv[1], "rb");
 		target = fopen(argv[2], "wb");
 		/* level is ignored here */
-		z = zstrm_create(ZSTRM_RMODE | ZSTRM_AUTO, level, allocator);
+		z = zstrm_create(ZSTRM_INFLATE | ZSTRM_AUTO, level, allocator);
 	}
 
 	if (z == NULL) {
