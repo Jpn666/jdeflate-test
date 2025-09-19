@@ -1,4 +1,4 @@
 .vscode
 builddir/
-subprojects/ctoolbox/
-subprojects/jdeflate/
+subprojects/*
+!subprojects/*.wrap
