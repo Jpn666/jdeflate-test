@@ -19,7 +19,7 @@ rcallback(uint8* buffer, uintxx size, void* user)
 		}
 	}
 
-	return r;
+	return (intxx) r;
 }
 
 static intxx
@@ -33,12 +33,12 @@ wcallback(uint8* buffer, uintxx size, void* user)
 			return -1;
 		}
 	}
-	return r;
+	return (intxx) r;
 }
 
 
 static bool
-inflate(TZStrm* z, FILE* source, FILE* target)
+inflate(const TZStrm* z, FILE* source, FILE* target)
 {
 	uintxx r;
 
@@ -66,7 +66,7 @@ inflate(TZStrm* z, FILE* source, FILE* target)
 }
 
 static bool
-deflate(TZStrm* z, FILE* source, FILE* target)
+deflate(const TZStrm* z, FILE* source, FILE* target)
 {
 	uintxx r;
 
@@ -176,7 +176,7 @@ parsearguments(char* argv[], struct TArguments result[1])
 			if (argv[0][1] >= 0x30 && argv[0][1] <= 0x39) {
 				if (haslevel)
 					goto L_ERROR;
-				result[0].level = argv[0][1] - 0x30;
+				result[0].level = (uintxx) argv[0][1] - 0x30;
 				argv++;
 				haslevel = 1;
 			}
@@ -196,10 +196,9 @@ int
 main(int argc, char* argv[])
 {
 	struct TArguments a[1];
-	intxx level;
 	FILE* source;
 	FILE* target;
-	TZStrm* z;
+	const TZStrm* z;
 	TAllocator allocator[1];
 
 	if (argc ^ 3 && argc ^ 6) {
@@ -219,7 +218,6 @@ main(int argc, char* argv[])
 	allocator[0].request = request_;
 	allocator[0].dispose = dispose_;
 
-	level = 0;
 	if (argc == 6) {
 		source = fopen(argv[4], "rb");
 		target = fopen(argv[5], "wb");
@@ -229,7 +227,7 @@ main(int argc, char* argv[])
 		source = fopen(argv[1], "rb");
 		target = fopen(argv[2], "wb");
 		/* level is ignored here */
-		z = zstrm_create(ZSTRM_INFLATE, level, allocator);
+		z = zstrm_create(ZSTRM_INFLATE, 0, allocator);
 	}
 
 	if (z == NULL) {
