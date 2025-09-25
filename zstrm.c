@@ -23,7 +23,7 @@ rcallback(uint8* buffer, uintxx size, void* user)
 }
 
 static intxx
-wcallback(uint8* buffer, uintxx size, void* user)
+wcallback(const uint8* buffer, uintxx size, void* user)
 {
 	uintxx r;
 

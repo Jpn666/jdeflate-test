@@ -8,8 +8,8 @@ static uint8 target[4096];
 bool
 compressfile(FILE* ihandle, FILE* ohandle)
 {
-	uintxx final;
-	uintxx result;
+	uint32 final;
+	uint32 result;
 	uintxx icount;
 	uintxx ocount;
 	bool done;

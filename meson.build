@@ -1,4 +1,4 @@
-project('jdeflate-test', 'c', default_options: ['buildtype=release', 'warning_level=3'])
+project('jdeflate-test', 'c', default_options: ['c_std=c99', 'warning_level=3'])
 
 
 deps = []
@@ -16,7 +16,6 @@ else
       '-Wunused-parameter',
       '-Wshadow',
       '-Wswitch',
-      '-Wduplicated-branches',
       '-Wcast-align',
       '-Wdouble-promotion'
     ]
