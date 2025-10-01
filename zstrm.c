@@ -141,7 +141,7 @@ dispose_(void* memory, uintxx amount, void* user)
 
 struct TArguments {
 	uintxx format;
-	uintxx level;
+	 intxx level;
 };
 
 static bool
@@ -176,7 +176,7 @@ parsearguments(char* argv[], struct TArguments result[1])
 			if (argv[0][1] >= 0x30 && argv[0][1] <= 0x39) {
 				if (haslevel)
 					goto L_ERROR;
-				result[0].level = (uintxx) argv[0][1] - 0x30;
+				result[0].level = (intxx) argv[0][1] - 0x30;
 				argv++;
 				haslevel = 1;
 			}
@@ -207,8 +207,8 @@ main(int argc, char* argv[])
 	}
 
 	if (argc == 6) {
-		a[0].format = (uintxx) -1;
-		a[0].level  = (uintxx) -1;
+		a[0].format = (uint32) -1;
+		a[0].level  = -1;
 		if (parsearguments(argv, a) == 0) {
 			showusage();
 			return 0;
