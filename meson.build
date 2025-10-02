@@ -2,8 +2,12 @@ project('jdeflate-test', 'c', default_options: ['c_std=c99', 'warning_level=3'])
 
 
 deps = []
-deps += [dependency('', fallback : ['ctoolbox', 'lib'])]
-deps += [dependency('', fallback : ['jdeflate', 'lib'])]
+deps += [dependency('', fallback : ['ctoolbox', 'ctoolbox_dep'])]
+deps += [dependency('', fallback : ['jdeflate', 'jdeflate_dep'])]
+
+if get_option('buildtype').startswith('release')
+    add_project_arguments('-DNDEBUG', language : 'c')
+endif
 
 cc = meson.get_compiler('c')
 if cc.get_id() == 'msvc'
