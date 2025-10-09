@@ -2,8 +2,9 @@ project('jdeflate-test', 'c', default_options: ['c_std=c99', 'warning_level=3'])
 
 
 deps = []
-deps += [dependency('', fallback : ['ctoolbox', 'ctoolbox_dep'])]
-deps += [dependency('', fallback : ['jdeflate', 'jdeflate_dep'])]
+deps += [dependency('', fallback: ['ctoolbox', 'ctoolbox_dep'], static: true)]
+deps += [dependency('', fallback: ['jdeflate', 'jdeflate_dep'], static: true)]
+
 
 if get_option('buildtype').startswith('release')
     add_project_arguments('-DNDEBUG', language : 'c')
