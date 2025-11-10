@@ -146,6 +146,8 @@ main(int argc, char* argv[])
 	uint8* input;
 	uint8* block;
 	uintxx n;
+	uintxx j;
+	int32 level;
 	uintxx factor;
 	uint32 r;
 	uintxx mode;
@@ -160,15 +162,19 @@ main(int argc, char* argv[])
 	TToIntResult result;
 	const TZStrm* zstrm;
 
-	if (argc != 4) {
-		puts("Usage: thisprogram deflate <blocksize-log-2> <input file>");
-		puts("Usage: thisprogram inflate <blocksize-log-2> <input file>");
+	if (argc != 4 && argc != 5) {
+		puts("Usage: thisprogram deflate <level> <blocksize-log-2> <input>");
+		puts("Usage: thisprogram inflate <blocksize-log-2> <input>");
 		return 0;
 	}
 
 	mode = 0;
 	if (strcmp(argv[1], "deflate") == 0) {
 		mode = 1;
+		if (argc != 5) {
+			puts("bad deflate parameters");
+			return 0;
+		}
 	}
 	if (strcmp(argv[1], "inflate") == 0) {
 		mode = 2;
@@ -178,20 +184,35 @@ main(int argc, char* argv[])
 		return 0;
 	}
 
-	result = strtou32((void*) argv[2], NULL, 10);
+	j = 2;
+	if (mode == 1) {
+		result = strtoi32((void*) argv[j], NULL, 10);
+		if (result.error) {
+			puts("invalid compression level");
+			return 0;
+		}
+		level = (int32) result.value.asi32;
+		if (level < 0 || level > 9) {
+			puts("invalid compression level");
+			return 0;
+		}
+		j++;
+	}
+
+	result = strtou32((void*) argv[j], NULL, 10);
 	if (result.error) {
 		puts("invalid block size factor");
 		return 0;
 	}
-
 	factor = (uintxx) result.value.asu32;
 	if (factor > 28) {
 		puts("invalid block size factor");
 		return 0;
 	}
 	factor = (uintxx) 1u << factor;
+	j++;
 
-	n = readinto(argv[3], &input);
+	n = readinto(argv[j], &input);
 	if (n == 0) {
 		puts("failed to read file");
 		return 0;
@@ -234,7 +255,7 @@ main(int argc, char* argv[])
 		uint32 f;
 
 		f = (uint32) ZSTRM_DEFLATE | (uint32) ZSTRM_DFLT;
-		zstrm = zstrm_create(f, 9, NULL);
+		zstrm = zstrm_create(f, level, NULL);
 		if (zstrm == NULL) {
 			puts("failed to create zstrm");
 			goto L_ERROR;
