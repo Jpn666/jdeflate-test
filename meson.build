@@ -7,7 +7,7 @@ deps += [dependency('', fallback: ['jdeflate', 'jdeflate_dep'], static: true)]
 
 
 if get_option('buildtype').startswith('release')
-    add_project_arguments('-DNDEBUG', language : 'c')
+  add_project_arguments('-DNDEBUG', language: 'c')
 endif
 
 cc = meson.get_compiler('c')
