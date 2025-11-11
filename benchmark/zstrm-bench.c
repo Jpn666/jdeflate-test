@@ -185,6 +185,7 @@ main(int argc, char* argv[])
 	}
 
 	j = 2;
+	level = 0;
 	if (mode == 1) {
 		result = strtoi32((void*) argv[j], NULL, 10);
 		if (result.error) {
